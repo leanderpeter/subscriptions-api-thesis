@@ -1,0 +1,667 @@
+openapi: 3.0.0
+info:
+  title: Subscriptions API
+  description: >
+    The Subscriptions API allows other departments to:
+      * create subscription records.
+      * update specific parts of the subscription records.
+      * retrieve:
+          * subscription records
+          * events 
+          * drivers associated with a subscription.
+  version: 1.0.0
+
+servers:
+  - url: https://dev-api-ops-subscriptions.finn.auto
+    description: Development server
+  - url: https://stg-api-ops-subscriptions.finn.auto
+    description: Staging server
+  - url: https://api-ops-subscriptions.finn.auto
+    description: Production server
+
+tags:
+  - name: Create
+  - name: Update
+  - name: Retrieve
+
+security:
+  - ApiKeyAuth: []
+  - Actor: []
+
+paths:
+  /subscriptions:
+    post:
+      tags:
+        - Create
+      summary: Create a subscription
+      description: Creates a subscription record.
+      operationId: createSubscription
+      parameters:
+        - in: header
+          name: x-finn-request-id
+          schema:
+            $ref: "#/components/schemas/x-finn-request-id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubscription"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OneSubscription"
+
+  /subscriptions/{subscription_id}:
+    get:
+      tags:
+        - Retrieve
+      summary: Retrieve a subscription
+      description: >
+        Returns a subscription record by ID.
+      operationId: getSubscription
+      parameters:
+        - in: header
+          name: x-finn-request-id
+          schema:
+            $ref: "#/components/schemas/x-finn-request-id"
+        - in: path
+          name: subscription_id
+          schema:
+            type: string
+          required: true
+          description: Subscription ID
+        - in: query
+          name: expand
+          schema:
+            type: string
+            enum:
+              ["deposit", "contact"]
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OneSubscription"
+
+  /subscriptions/{subscription_id}/events:
+    get:
+      tags:
+        - Retrieve
+      summary: List events for a subscription
+      description: >
+        Returns events for a specific subscription record.
+      operationId: subscriptionEvents
+      parameters:
+        - in: header
+          name: x-finn-request-id
+          schema:
+            $ref: "#/components/schemas/x-finn-request-id"
+        - in: path
+          name: subscription_id
+          schema:
+            type: string
+          required: true
+          description: Subscription ID
+        - in: query
+          name: from
+          schema:
+            type: string
+            format: date-time
+          description: Filter events from a given date and time
+        - in: query
+          name: to
+          schema:
+            type: string
+            format: date-time
+          description: Filter events till a given date and time
+        - in: query
+          name: count
+          schema:
+            type: number
+          description: Number of events you want to fetch
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Allows you to sort by time of the event
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Events"
+
+  /events:
+    get:
+      tags:
+        - Retrieve
+      summary: List events
+      description: >
+        Returns all events
+      operationId: listEvents
+      parameters:
+        - in: header
+          name: x-finn-request-id
+          schema:
+            $ref: "#/components/schemas/x-finn-request-id"
+        - in: query
+          name: from
+          schema:
+            type: string
+            format: date-time
+          description: Filter events from a given date and time
+        - in: query
+          name: to
+          schema:
+            type: string
+            format: date-time
+          description: Filter events till a given date and time
+        - in: query
+          name: count
+          schema:
+            type: number
+          description: Number of events you want to fetch
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Allows you to sort by time of the event
+        - in: query
+          name: name
+          schema:
+            type: string
+            enum:
+              [
+                subscription_created,
+                subscription_canceled,
+                subscription_activated,
+              ]
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Events"
+
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-Api-Key
+      in: header
+      description: Generated through the API Gateway console. Each service uses the separate key.
+
+    Actor:
+      type: apiKey
+      name: x-finn-actor
+      in: header
+      description: Identifies who has made the request.
+
+  schemas:
+    #Headers
+
+    x-finn-request-id:
+      type: string
+      description: Allows to trace the request.
+
+    #Request body
+
+    CreateSubscription:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Desired ID, pass only if you want same subscription ID across multiple systems, such as HubSpot
+        car_reservation_token:
+          type: string
+          description: Car reservation token
+        contact_id:
+          type: string
+          description: Contact ID
+        type:
+          type: string
+          enum: [B2C, B2B, MINIB2B]
+          description: Subscription type.
+        signing_date:
+          type: string
+          format: date-time
+          description: Contract signing date
+        term:
+          type: integer
+          description: Subscription period
+        term_type:
+          type: string
+          enum: [fixed, open_ended]
+          description: Contract term type
+        amount:
+          type: integer
+          description: Subscription fee in cents
+        mileage_package:
+          type: integer
+        mileage_package_fee:
+          type: integer
+          description: Mileage package fee in cents
+        additional_mileage_fee:
+          type: integer
+          description: Additional mileage fee fee in cents
+        deposit:
+          type: integer
+          description: Deposit in cents
+        handover_firstname:
+          type: string
+          description: First name of the recipient
+        handover_lastname:
+          type: string
+          description: Last name of the recipient
+        handover_housenumber:
+          type: string
+          description: Housenumber of the recipient
+        handover_street:
+          type: string
+          description: Street name of the recipient
+        handover_city:
+          type: string
+          description: City of of the recipient
+        handover_zip:
+          type: string
+          description: Zipcode of the recipient
+        handover_address_extra:
+          type: string
+          description: Any additional address data of the recipient
+        preferred_handover_date:
+          type: string
+          format: date-time
+          description: Preferred handover date and time by the customer
+        handover_phone_number:
+          type: string
+          description: Phone number of the car handover recipient
+        company_id:
+          type: string
+          description: Company ID [Required for B2B / MINIB2B]
+        organization_id:
+          type: string
+          description: ID of the organization associated with B2B subscriptions. An organization is a company which can have children companies having FINN subscriptions
+        manager_id:
+          type: string
+          description: ID of the FINN person managing this subscription
+        salesperson_id:
+          type: string
+          description: ID of the FINN sales person who signed this subscription
+        primary_driver_id:
+          type: string
+          description: ID of the driver associated with a subscription
+        previous_subscription_id:
+          type: string
+          description: ID of the previous subscription of a customer
+        previous_subscription_source:
+          type: string
+          enum: [OLD_WORLD, NEW_WORLD]
+          description: Source of the previous subscription
+        retention_comment:
+          type: string
+          description: Retention related comment
+        non_retention_reason:
+          type: string
+          description: Reason for non-retention
+        damage_deductible_teilkasko:
+          type: number
+          description: Teilkasko damage deductible in cents
+        damage_deductible_vollkasko:
+          type: number
+          description: Vollkasko damage deductible in cents
+      required:
+        - car_reservation_token
+        - contact_id
+        - type
+        - signing_date
+        - term
+        - amount
+        - mileage_package
+        - mileage_package_fee
+        - additional_mileage_fee
+        - deposit
+        - handover_firstname
+        - handover_lastname
+        - handover_housenumber
+        - handover_street
+        - handover_city
+        - handover_zip
+        - preferred_handover_date
+
+    UpdateSubscriptionState:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+            ["ACTIVE", "CANCELED", "INACTIVE", "STOPPED", "ENDED"]
+        termination_reason: 
+          type: string
+          description: Reason of termination
+        termination_date: 
+          type: string
+          description: Termination datetime in ISO_8601 format
+          format: date-time
+      required:
+        - state
+
+
+    UpdateHandover:
+      type: object
+      properties:
+        handover_firstname:
+          type: string
+          description: First name of the recipient
+        handover_lastname:
+          type: string
+          description: Last name of the recipient
+        handover_housenumber:
+          type: string
+          description: Housenumber of the recipient
+        handover_street:
+          type: string
+          description: Street name of the recipient
+        handover_city:
+          type: string
+          description: City of of the recipient
+        handover_zip:
+          type: string
+          description: Zipcode of the recipient
+        handover_phone_number:
+          type: string
+          description: Phone number of the recipient
+        handover_address_extra:
+          type: string
+          description: Any additional address data of the recipient
+      required:
+        - handover_firstname
+        - handover_lastname
+        - handover_housenumber
+        - handover_street
+        - handover_city
+        - handover_zip
+        - handover_phone_number
+
+
+    #Responses
+
+    200:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+
+
+    Events:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              subscription_id:
+                type: integer
+              name:
+                type: string
+              actor:
+                type: string
+              time:
+                type: string
+                format: date-time
+              notes:
+                type: string
+              snapshot:
+                $ref: "#/components/schemas/Subscription"
+
+
+    Subscription:
+      type: object
+      required:
+        - id
+        - state
+        - car_id
+        - contact_id
+        - type
+        - signing_date
+        - term
+        - term_type
+        - amount
+        - mileage_package
+        - mileage_package_fee
+        - additional_mileage_fee
+        - deposit
+        - handover_firstname
+        - handover_lastname
+        - handover_housenumber
+        - handover_street
+        - handover_city
+        - handover_zip
+        - preferred_handover_date
+        - handover_phone_number
+        - created_at
+        - updated_at
+        - last_contract_change_date
+      properties:
+        id:
+          type: string
+          description: Subscription ID
+        state:
+          type: string
+          enum:
+            ["CREATED", "ACTIVE", "CANCELED", "INACTIVE", "STOPPED", "ENDED"]
+        car_id:
+          type: string
+          description: ID of the car that was matched with this subscription
+        contact_id:
+          type: string
+          description: Contact ID
+        type:
+          type: string
+          enum: [B2C, B2B, MINIB2B]
+          description: Customer type.
+        signing_date:
+          type: string
+          format: date-time
+          description: Contract signing date
+        end_date:
+          type: string
+          format: date-time
+          description: Contract end date
+        term:
+          type: integer
+          description: Subscription period
+        term_type:
+          type: string
+          enum: [fixed, open_ended]
+          description: Contract term type
+        amount:
+          type: integer
+          description: Subscription fee in cents
+        mileage_package:
+          type: integer
+        mileage_package_fee:
+          type: integer
+          description: mileage package fee in cents
+        additional_mileage_fee:
+          type: integer
+          description: additional mileage fee in cents
+        deposit:
+          type: integer
+          description: deposit fee in cents
+        handover_firstname:
+          type: string
+          description: First name of the recipient
+        handover_lastname:
+          type: string
+          description: Last name of the recipient
+        handover_housenumber:
+          type: string
+          description: Housenumber of the recipient
+        handover_street:
+          type: string
+          description: Street name of the recipient
+        handover_city:
+          type: string
+          description: City of of the recipient
+        handover_zip:
+          type: string
+          description: Zipcode of the recipient
+        handover_address_extra:
+          type: string
+          description: Any additional address data of the recipient
+        preferred_handover_date:
+          type: string
+          format: date-time
+          description: Preferred handover date and time by the customer
+        actual_handover_date:
+          type: string
+          format: date-time
+          description: Actual handover date and time
+        handover_phone_number:
+          type: string
+          description: Phone number of the car handover recipient
+        termination_reason: 
+          type: string
+          description: Reason of termination
+        termination_date: 
+          type: string
+          description: Termination datetime in ISO_8601 format
+          format: date-time
+        company_id:
+          type: string
+          description: ID of the company associated with B2B / MINIB2B subscription
+        organization_id:
+          type: string
+          description: ID of the organization associated with B2B subscriptions. An organization is a company which can have children companies having FINN subscriptions
+        manager_id:
+          type: string
+          description: ID of the FINN person managing this subscription
+        salesperson_id:
+          type: string
+          description: ID of the FINN sales person who signed this subscription
+        primary_driver_id:
+          type: string
+          description: ID of the driver associated with a subscription
+        deposit_details:
+          description: Deposit details of the subscription. Only present if expand=deposit is passed
+          type: object
+          properties:
+            paid:
+              type: boolean
+        previous_subscription_id:
+          type: string
+          description: Subscription ID of the previous subscription.
+        previous_subscription_source:
+          type: string
+          enum: ["OLD_WORLD", "NEW_WORLD"]
+          description: Previous subscription tech-architecture source.
+        retention_type:
+          type: string
+          enum: ["PROLONGATION","SWAP_SAME_DAY","SWAP_DIFFERENT_DAY","EXPANSION","REPEAT_CUSTOMER"]
+          description: Retention Type of customer.
+        retention_comment:
+          type: string
+          description: Custom comment about retention.
+        non_retention_reason:
+          type: string
+          description: Reason for non-retention.
+        created_at:
+          type: string
+          format: date-time
+          description: Time at which subscription was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Time at which subscription was last updated
+        last_contract_change_date:
+          type: string
+          format: date-time
+          description: Time at which any contract related properties were updated. Needed by SAPxFINN team
+        damage_deductible_teilkasko:
+          type: number
+          description: Teilkasko damage deductible in cents
+        damage_deductible_vollkasko:
+          type: number
+          description: Vollkasko damage deductible in cents
+        contact:
+          type: object
+          description: Customer Object associated to the subscription
+          $ref: "#/components/schemas/Contact"
+
+        
+    Contact:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the customer
+        first_name:
+          type: string
+          description: The first name of the customer
+        last_name:
+          type: string
+          description: The last name of the customer
+        date_of_birth:
+          type: string
+          format: date-time
+          description: The date of birth of the customer in ISO 8601 
+        street:
+          type: string
+          description: The street address of the customer
+        city:
+          type: string
+          description: The city of the customer's address
+        zip:
+          type: string
+          description: The zip code of the customer's address
+        internal_verification_decision_dl:
+          type: string
+          description: The internal verification decision for the customer's driver's license
+        internal_verification_decision_id:
+          type: string
+          description: The internal verification decision for the customer's identification
+          
+
+    AllSubscriptions:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Subscription"
+
+    OneSubscription:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          $ref: "#/components/schemas/Subscription"
+
+    EmptyResponse:
+      type: object
+      properties:
+        message:
+          type: string

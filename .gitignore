@@ -1,0 +1,23 @@
+# package directories
+node_modules
+
+# Serverless directories
+.serverless
+
+# IDE
+.vscode/*
+.idea/
+!.vscode/extensions.json
+
+# env
+.env
+
+# misc
+.DS_Store
+
+# tests
+/coverage
+junit.xml
+
+# builds
+.build

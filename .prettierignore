@@ -1,0 +1,7 @@
+# Directories
+.build
+.husky
+
+# Files
+openapi.json
+yarn.lock
