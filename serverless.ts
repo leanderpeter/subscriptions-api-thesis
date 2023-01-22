@@ -16,9 +16,9 @@ const serverlessConfiguration: Serverless = {
       noPrependStageInUrl: true,
       apiKey: "test-local-api-key",
     },
-    // customDomain: {
-    //   domainName: process.env.SUBSCRIPTIONS_DOMAIN,
-    // },
+    customDomain: {
+      domainName: process.env.SUBSCRIPTIONS_DOMAIN,
+    },
   },
   plugins: [
     "serverless-plugin-typescript",
