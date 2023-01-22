@@ -67,6 +67,14 @@ jobs:
         npx sls deploy --stage development --verbose
       env:
         CORRELATION_ID_HEADER_NAME: ${{vars.CORRELATION_ID_HEADER_NAME}}
+        ACTOR_HEADER_NAME: ${{vars.ACTOR_HEADER_NAME}}
+        LOG_LEVEL: ${{vars.LOG_LEVEL}}
+        SUBSCRIPTIONS_DATABASE_URL: ${{vars.SUBSCRIPTIONS_DATABASE_URL}}
+        CARS_SERVICE_BASE_URL: ${{vars.CARS_SERVICE_BASE_URL}}
+        CARS_SERVICE_API_KEY: ${{vars.CARS_SERVICE_API_KEY}}
+        CUSTOMERS_SERVICE_BASE_URL: ${{vars.CUSTOMERS_SERVICE_BASE_URL}}
+        CUSTOMERS_SERVICE_API_KEY: ${{vars.CUSTOMERS_SERVICE_API_KEY}}
+        SUBSCRIPTIONS_DOMAIN: ${{vars.SUBSCRIPTIONS_DOMAIN}}
 
   deploy-staging:
     runs-on: ubuntu-latest
@@ -87,6 +95,16 @@ jobs:
         echo "Deploying version ${VERSION}"
         npx sls create_domain --stage staging --verbose
         npx sls deploy --stage staging --verbose
+      env:
+        CORRELATION_ID_HEADER_NAME: ${{vars.CORRELATION_ID_HEADER_NAME}}
+        ACTOR_HEADER_NAME: ${{vars.ACTOR_HEADER_NAME}}
+        LOG_LEVEL: ${{vars.LOG_LEVEL}}
+        SUBSCRIPTIONS_DATABASE_URL: ${{vars.SUBSCRIPTIONS_DATABASE_URL}}
+        CARS_SERVICE_BASE_URL: ${{vars.CARS_SERVICE_BASE_URL}}
+        CARS_SERVICE_API_KEY: ${{vars.CARS_SERVICE_API_KEY}}
+        CUSTOMERS_SERVICE_BASE_URL: ${{vars.CUSTOMERS_SERVICE_BASE_URL}}
+        CUSTOMERS_SERVICE_API_KEY: ${{vars.CUSTOMERS_SERVICE_API_KEY}}
+        SUBSCRIPTIONS_DOMAIN: ${{vars.SUBSCRIPTIONS_DOMAIN}}
 
   deploy-production:
     runs-on: ubuntu-latest
@@ -107,6 +125,17 @@ jobs:
         echo "Deploying version ${VERSION}"
         npx sls create_domain --stage production --verbose
         npx sls deploy --stage production --verbose
+      env:
+        CORRELATION_ID_HEADER_NAME: ${{vars.CORRELATION_ID_HEADER_NAME}}
+        ACTOR_HEADER_NAME: ${{vars.ACTOR_HEADER_NAME}}
+        LOG_LEVEL: ${{vars.LOG_LEVEL}}
+        SUBSCRIPTIONS_DATABASE_URL: ${{vars.SUBSCRIPTIONS_DATABASE_URL}}
+        CARS_SERVICE_BASE_URL: ${{vars.CARS_SERVICE_BASE_URL}}
+        CARS_SERVICE_API_KEY: ${{vars.CARS_SERVICE_API_KEY}}
+        CUSTOMERS_SERVICE_BASE_URL: ${{vars.CUSTOMERS_SERVICE_BASE_URL}}
+        CUSTOMERS_SERVICE_API_KEY: ${{vars.CUSTOMERS_SERVICE_API_KEY}}
+        SUBSCRIPTIONS_DOMAIN: ${{vars.SUBSCRIPTIONS_DOMAIN}}
+  
   db-migrate-dev:
     runs-on: ubuntu-latest
     needs: deploy-development
