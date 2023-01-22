@@ -39,9 +39,6 @@ const functions: Functions = {
   "api-create-subscription": {
     handler: "src/interfaces/lambda-http/subscriptions/post/main.handler",
     timeout: 15,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    alarms: ["sideEffectFailures"],
     events: [
       {
         http: {

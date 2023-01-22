@@ -11,14 +11,18 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container: node:14-alpine3.16
     services:
       postgres:
-        image: postgres:12.6-alpine
+        image: postgres
         env:
           POSTGRES_PASSWORD: password
-          POSTGRES_HOST_AUTH_METHOD: trust
-    env:
-      LOCAL_DATABASE_URL: "postgres://postgres:password@postgres:5432"
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -31,14 +35,18 @@ jobs:
     - name: Lint
       run: yarn lint
     - name: Test
-      run: yarn test-ci
+      run: CI_TESTING=true yarn test-ci
+      env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
     - name: Collect test results
       uses: actions/upload-artifact@v2
       with:
         name: test-results
         path: junit.xml, coverage/cobertura-coverage.xml
 
-  deploy-dev:
+  deploy-development:
+    environment: DEV
     runs-on: ubuntu-latest
     needs: test
     if: github.event_name == 'pull_request'
@@ -57,6 +65,18 @@ jobs:
         echo "Deploying version ${VERSION}"
         npx sls create_domain --stage development --verbose
         npx sls deploy --stage development --verbose
+      env:
+        CORRELATION_ID_HEADER_NAME: ${{vars.CORRELATION_ID_HEADER_NAME}}
+        ACTOR_HEADER_NAME: ${{vars.ACTOR_HEADER_NAME}}
+        LOG_LEVEL: ${{vars.LOG_LEVEL}}
+        SUBSCRIPTIONS_DATABASE_URL: ${{vars.SUBSCRIPTIONS_DATABASE_URL}}
+        CARS_SERVICE_BASE_URL: ${{vars.CARS_SERVICE_BASE_URL}}
+        CARS_SERVICE_API_KEY: ${{vars.CARS_SERVICE_API_KEY}}
+        CUSTOMERS_SERVICE_BASE_URL: ${{vars.CUSTOMERS_SERVICE_BASE_URL}}
+        CUSTOMERS_SERVICE_API_KEY: ${{vars.CUSTOMERS_SERVICE_API_KEY}}
+        SUBSCRIPTIONS_DOMAIN: ${{vars.SUBSCRIPTIONS_DOMAIN}}
+        AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
   deploy-staging:
     runs-on: ubuntu-latest
@@ -77,6 +97,18 @@ jobs:
         echo "Deploying version ${VERSION}"
         npx sls create_domain --stage staging --verbose
         npx sls deploy --stage staging --verbose
+      env:
+        CORRELATION_ID_HEADER_NAME: ${{vars.CORRELATION_ID_HEADER_NAME}}
+        ACTOR_HEADER_NAME: ${{vars.ACTOR_HEADER_NAME}}
+        LOG_LEVEL: ${{vars.LOG_LEVEL}}
+        SUBSCRIPTIONS_DATABASE_URL: ${{vars.SUBSCRIPTIONS_DATABASE_URL}}
+        CARS_SERVICE_BASE_URL: ${{vars.CARS_SERVICE_BASE_URL}}
+        CARS_SERVICE_API_KEY: ${{vars.CARS_SERVICE_API_KEY}}
+        CUSTOMERS_SERVICE_BASE_URL: ${{vars.CUSTOMERS_SERVICE_BASE_URL}}
+        CUSTOMERS_SERVICE_API_KEY: ${{vars.CUSTOMERS_SERVICE_API_KEY}}
+        SUBSCRIPTIONS_DOMAIN: ${{vars.SUBSCRIPTIONS_DOMAIN}}
+        AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
   deploy-production:
     runs-on: ubuntu-latest
@@ -97,9 +129,22 @@ jobs:
         echo "Deploying version ${VERSION}"
         npx sls create_domain --stage production --verbose
         npx sls deploy --stage production --verbose
+      env:
+        CORRELATION_ID_HEADER_NAME: ${{vars.CORRELATION_ID_HEADER_NAME}}
+        ACTOR_HEADER_NAME: ${{vars.ACTOR_HEADER_NAME}}
+        LOG_LEVEL: ${{vars.LOG_LEVEL}}
+        SUBSCRIPTIONS_DATABASE_URL: ${{vars.SUBSCRIPTIONS_DATABASE_URL}}
+        CARS_SERVICE_BASE_URL: ${{vars.CARS_SERVICE_BASE_URL}}
+        CARS_SERVICE_API_KEY: ${{vars.CARS_SERVICE_API_KEY}}
+        CUSTOMERS_SERVICE_BASE_URL: ${{vars.CUSTOMERS_SERVICE_BASE_URL}}
+        CUSTOMERS_SERVICE_API_KEY: ${{vars.CUSTOMERS_SERVICE_API_KEY}}
+        SUBSCRIPTIONS_DOMAIN: ${{vars.SUBSCRIPTIONS_DOMAIN}}
+        AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+  
   db-migrate-dev:
     runs-on: ubuntu-latest
-    needs: deploy-dev
+    needs: deploy-development
     if: github.event_name == 'pull_request'
     steps:
     - name: Migrate

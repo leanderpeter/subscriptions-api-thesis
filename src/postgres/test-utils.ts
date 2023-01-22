@@ -8,9 +8,14 @@ export interface TestDBContext {
 }
 
 export function connection(database = "postgres"): Knex {
-  const conn =
-    process.env.SUBSCRIPTIONS_DATABASE_URL ||
-    `postgres://postgres:password@localhost:5432`;
+  let conn = "";
+  if (process.env.CI_TESTING === "true") {
+    conn = `postgres://postgres:password@${
+      process.env.POSTGRES_HOST || "localhost"
+    }:${process.env.POSTGRES_PORT || "5432"}`;
+  } else {
+    process.env.SUBSCRIPTIONS_DATABASE_URL;
+  }
   return knex({
     client: "postgres",
     connection: `${conn}/${database}`,
