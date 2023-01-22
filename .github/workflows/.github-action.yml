@@ -63,8 +63,8 @@ jobs:
       run: |
         VERSION=$(git rev-parse --short HEAD)
         echo "Deploying version ${VERSION}"
-        npx sls create_domain --stage development --verbose
         npx sls deploy --stage development --verbose
+      # npx sls create_domain --stage development --verbose
       env:
         CORRELATION_ID_HEADER_NAME: ${{vars.CORRELATION_ID_HEADER_NAME}}
         ACTOR_HEADER_NAME: ${{vars.ACTOR_HEADER_NAME}}
@@ -127,8 +127,8 @@ jobs:
       run: |
         VERSION=$(git rev-parse --short HEAD)
         echo "Deploying version ${VERSION}"
+        npx sls create_domain --stage production --verbose
         npx sls deploy --stage production --verbose
-      # npx sls create_domain --stage production --verbose
       env:
         CORRELATION_ID_HEADER_NAME: ${{vars.CORRELATION_ID_HEADER_NAME}}
         ACTOR_HEADER_NAME: ${{vars.ACTOR_HEADER_NAME}}
