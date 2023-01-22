@@ -14,17 +14,15 @@ jobs:
     container: node:14-alpine3.16
     services:
       postgres:
-        image: postgres:12.6-alpine
+        image: postgres
         env:
           POSTGRES_PASSWORD: password
-          POSTGRES_HOST_AUTH_METHOD: trust
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    env:
-      LOCAL_DATABASE_URL: "postgres://postgres:password@postgres:5432"
+        
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -37,7 +35,10 @@ jobs:
     - name: Lint
       run: yarn lint
     - name: Test
-      run: yarn test-ci
+      run: CI_TESTING=true yarn test-ci
+      env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
     - name: Collect test results
       uses: actions/upload-artifact@v2
       with:
