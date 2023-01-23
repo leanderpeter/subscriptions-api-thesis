@@ -30,7 +30,7 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
     expect(res.body).toEqual(
       JSON.stringify({
         data: {},
-        message: "header x-finn-actor is required",
+        message: "header x-actor is required",
       })
     );
   });
@@ -43,7 +43,7 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
         id: undefined,
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -76,7 +76,7 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
         count: "ABC",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -101,7 +101,7 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
         count: "0",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -133,7 +133,7 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
         from: "13-02-199710:11",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -165,7 +165,7 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
         sort: "hello",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -187,7 +187,7 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
         to: "2011-10-01T14:48:00.000Z",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -212,7 +212,7 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
         from: "2011-10-05T14:48:00.000Z",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -235,8 +235,8 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
         id: "123",
       },
       headers: {
-        "x-finn-actor": "me",
-        "x-finn-request-id": "test-request-id",
+        "x-actor": "me",
+        "x--request-id": "test-request-id",
       },
     });
 
@@ -293,8 +293,8 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
         to: "2022-06-10T09:38:38.999Z",
       },
       headers: {
-        "x-finn-actor": "me",
-        "x-finn-request-id": "test-request-id",
+        "x-actor": "me",
+        "x--request-id": "test-request-id",
       },
     });
 
@@ -329,8 +329,8 @@ describe("GET /subscriptions/{id}/events?from=&to=&count=&sort=", () => {
         to: "2022-06-10T09:38:38.999Z",
       },
       headers: {
-        "x-finn-actor": "me",
-        "x-finn-request-id": "test-request-id",
+        "x-actor": "me",
+        "x--request-id": "test-request-id",
       },
     });
 

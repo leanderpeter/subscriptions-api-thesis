@@ -27,7 +27,7 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
     expect(res.body).toEqual(
       JSON.stringify({
         data: {},
-        message: "header x-finn-actor is required",
+        message: "header x-actor is required",
       })
     );
   });
@@ -41,7 +41,7 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
         count: "ABC",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -63,7 +63,7 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
         count: "0",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -92,7 +92,7 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
         from: "13-02-199710:11",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -121,7 +121,7 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
         sort: "hello",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -139,7 +139,7 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
         name: "hello,world",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -160,7 +160,7 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
         to: "2011-10-01T14:48:00.000Z",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -182,7 +182,7 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
         from: "2011-10-05T14:48:00.000Z",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -202,8 +202,8 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
 
     const res = await invoke(ctx.handler, {
       headers: {
-        "x-finn-actor": "me",
-        "x-finn-request-id": "test-request-id",
+        "x-actor": "me",
+        "x--request-id": "test-request-id",
       },
     });
 
@@ -258,8 +258,8 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
         name: "subscription_created,subscription_canceled",
       },
       headers: {
-        "x-finn-actor": "me",
-        "x-finn-request-id": "test-request-id",
+        "x-actor": "me",
+        "x--request-id": "test-request-id",
       },
     });
 
@@ -292,8 +292,8 @@ describe("GET /events/?from=&to=&count=&sort=&name=", () => {
         name: "subscription_created,subscription_canceled",
       },
       headers: {
-        "x-finn-actor": "me",
-        "x-finn-request-id": "test-request-id",
+        "x-actor": "me",
+        "x--request-id": "test-request-id",
       },
     });
 

@@ -18,7 +18,7 @@ describe("health http handler", () => {
       statusCode: 200,
       headers: {
         "Content-Type": "application/json",
-        "x-finn-request-id": "",
+        "x--request-id": "",
       },
       body: JSON.stringify({
         data: {
@@ -45,7 +45,7 @@ describe("health http handler", () => {
       statusCode: 500,
       headers: {
         "Content-Type": "application/json",
-        "x-finn-request-id": "",
+        "x--request-id": "",
       },
       body: JSON.stringify({
         data: {

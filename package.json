@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "This service provides a set of APIs to manage subscriptions and its state, from created to closed",
   "main": "index.js",
-  "repository": "https://gitlab.com/finn.auto/customer-fleet-ops/subscriptions.git",
-  "author": "customer.product@finn.auto",
+  "repository": "https://github.com/leanderpeter/subscriptions-api-thesis",
+  "author": "leander.peter@icloud.com",
   "private": true,
   "devDependencies": {
     "@faker-js/faker": "^6.1.2",

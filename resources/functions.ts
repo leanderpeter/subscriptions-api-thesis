@@ -1,4 +1,13 @@
-import { Functions } from "serverless/aws";
+import { Functions, Vpc } from "serverless/aws";
+
+function csvArray(v?: string): string[] {
+  return v?.split(",") ?? [];
+}
+
+const vpc: Vpc = {
+  securityGroupIds: csvArray(process.env.SUBSCRIPTIONS_VPC_SECURITY_GROUP_IDS),
+  subnetIds: csvArray(process.env.SUBSCRIPTIONS_VPC_SUBNET_IDS),
+};
 
 const functions: Functions = {
   "api-root": {
@@ -15,6 +24,7 @@ const functions: Functions = {
   },
   "api-health": {
     handler: "src/interfaces/lambda-http/health/main.handler",
+    vpc,
     events: [
       {
         http: {
@@ -26,6 +36,7 @@ const functions: Functions = {
   },
   "api-get-subscription-by-id": {
     handler: "src/interfaces/lambda-http/subscriptions/get/main.handler",
+    vpc,
     events: [
       {
         http: {
@@ -39,6 +50,7 @@ const functions: Functions = {
   "api-create-subscription": {
     handler: "src/interfaces/lambda-http/subscriptions/post/main.handler",
     timeout: 15,
+    vpc,
     events: [
       {
         http: {
@@ -52,6 +64,7 @@ const functions: Functions = {
   "api-transition-subscription-state": {
     handler: "src/interfaces/lambda-http/subscriptions/put-state/main.handler",
     timeout: 15,
+    vpc,
     events: [
       {
         http: {
@@ -65,6 +78,7 @@ const functions: Functions = {
   "api-list-possible-state-transitions": {
     handler:
       "src/interfaces/lambda-http/subscriptions/get-possible-state-transitions/main.handler",
+    vpc,
     events: [
       {
         http: {
@@ -79,6 +93,7 @@ const functions: Functions = {
     handler:
       "src/interfaces/lambda-http/subscriptions/get-by-filters/main.handler",
     timeout: 15,
+    vpc,
     events: [
       {
         http: {

@@ -143,14 +143,14 @@ Error:
 yarn run v1.22.17
 $ NODE_ENV=local npx knex migrate:latest --knexfile ./src/postgres/knexfile.ts
 Requiring external module ts-node/register
-Working directory changed to ~/FINN/subscriptions/src/postgres
+Working directory changed to ~/subscriptions/src/postgres
 Using environment: local
 database "subscriptions_local_thesis" does not exist
 error: database "subscriptions_local_thesis" does not exist
-    at Parser.parseErrorMessage (/Users/l/FINN/subscriptions/node_modules/pg-protocol/src/parser.ts:369:69)
-    at Parser.handlePacket (/Users/l/FINN/subscriptions/node_modules/pg-protocol/src/parser.ts:188:21)
-    at Parser.parse (/Users/l/FINN/subscriptions/node_modules/pg-protocol/src/parser.ts:103:30)
-    at Socket.<anonymous> (/Users/l/FINN/subscriptions/node_modules/pg-protocol/src/index.ts:7:48)
+    at Parser.parseErrorMessage (/Users/l/subscriptions/node_modules/pg-protocol/src/parser.ts:369:69)
+    at Parser.handlePacket (/Users/l/subscriptions/node_modules/pg-protocol/src/parser.ts:188:21)
+    at Parser.parse (/Users/l/subscriptions/node_modules/pg-protocol/src/parser.ts:103:30)
+    at Socket.<anonymous> (/Users/l/subscriptions/node_modules/pg-protocol/src/index.ts:7:48)
     at Socket.emit (events.js:400:28)
     at Socket.emit (domain.js:475:12)
     at addChunk (internal/streams/readable.js:293:12)

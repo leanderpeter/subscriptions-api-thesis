@@ -42,7 +42,7 @@ describe("GET /subscriptions/{id}/state_transitions", () => {
     expect(res.body).toEqual(
       JSON.stringify({
         data: {},
-        message: "header x-finn-actor is required",
+        message: "header x-actor is required",
       })
     );
   });
@@ -56,7 +56,7 @@ describe("GET /subscriptions/{id}/state_transitions", () => {
         id: "123",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -78,7 +78,7 @@ describe("GET /subscriptions/{id}/state_transitions", () => {
         id: "123",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 
@@ -103,7 +103,7 @@ describe("GET /subscriptions/{id}/state_transitions", () => {
         id: "123",
       },
       headers: {
-        "x-finn-actor": "me",
+        "x-actor": "me",
       },
     });
 

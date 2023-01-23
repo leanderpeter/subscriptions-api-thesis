@@ -80,7 +80,7 @@ export default function createHandler(
       return response(
         StatusCodes.BAD_REQUEST,
         {},
-        "header x-finn-actor is required",
+        "header x-actor is required",
         ctx
       );
     }
