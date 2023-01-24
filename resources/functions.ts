@@ -104,6 +104,10 @@ const functions: Functions = {
       },
     ],
   },
+  "db-migrate": {
+    handler: "src/interfaces/lambda-postgres/apply-migrations/main.handler",
+    vpc,
+  },
 };
 
 export default functions;
