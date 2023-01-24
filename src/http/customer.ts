@@ -66,8 +66,8 @@ class HttpCustomerRepository implements CustomerRepository, HealthIndicator {
     try {
       const response = await this.cssConnection.get(url, {
         headers: {
-          "x-finn-request-id": metadata.requestId,
-          "x-finn-actor": metadata.actor,
+          "x--request-id": metadata.requestId,
+          "x-actor": metadata.actor,
         },
       });
       const record = (<GetCustomerResponse>response.data).data;

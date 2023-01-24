@@ -12,11 +12,11 @@ info:
   version: 1.0.0
 
 servers:
-  - url: https://dev-api-ops-subscriptions.finn.auto
+  - url: https://dev-api-ops-subscriptions. 
     description: Development server
-  - url: https://stg-api-ops-subscriptions.finn.auto
+  - url: https://stg-api-ops-subscriptions. 
     description: Staging server
-  - url: https://api-ops-subscriptions.finn.auto
+  - url: https://api-ops-subscriptions. 
     description: Production server
 
 tags:
@@ -38,9 +38,9 @@ paths:
       operationId: createSubscription
       parameters:
         - in: header
-          name: x-finn-request-id
+          name: x-request-id
           schema:
-            $ref: "#/components/schemas/x-finn-request-id"
+            $ref: "#/components/schemas/x-request-id"
       requestBody:
         required: true
         content:
@@ -65,9 +65,9 @@ paths:
       operationId: getSubscription
       parameters:
         - in: header
-          name: x-finn-request-id
+          name: x-request-id
           schema:
-            $ref: "#/components/schemas/x-finn-request-id"
+            $ref: "#/components/schemas/x-request-id"
         - in: path
           name: subscription_id
           schema:
@@ -98,9 +98,9 @@ paths:
       operationId: subscriptionEvents
       parameters:
         - in: header
-          name: x-finn-request-id
+          name: x-request-id
           schema:
-            $ref: "#/components/schemas/x-finn-request-id"
+            $ref: "#/components/schemas/x-request-id"
         - in: path
           name: subscription_id
           schema:
@@ -148,9 +148,9 @@ paths:
       operationId: listEvents
       parameters:
         - in: header
-          name: x-finn-request-id
+          name: x-request-id
           schema:
-            $ref: "#/components/schemas/x-finn-request-id"
+            $ref: "#/components/schemas/x-request-id"
         - in: query
           name: from
           schema:
@@ -203,14 +203,14 @@ components:
 
     Actor:
       type: apiKey
-      name: x-finn-actor
+      name: x-actor
       in: header
       description: Identifies who has made the request.
 
   schemas:
     #Headers
 
-    x-finn-request-id:
+    x-request-id:
       type: string
       description: Allows to trace the request.
 
@@ -290,13 +290,13 @@ components:
           description: Company ID [Required for B2B / MINIB2B]
         organization_id:
           type: string
-          description: ID of the organization associated with B2B subscriptions. An organization is a company which can have children companies having FINN subscriptions
+          description: ID of the organization associated with B2B subscriptions. An organization is a company which can have children companies having subscriptions
         manager_id:
           type: string
-          description: ID of the FINN person managing this subscription
+          description: ID of the person managing this subscription
         salesperson_id:
           type: string
-          description: ID of the FINN sales person who signed this subscription
+          description: ID of the sales person who signed this subscription
         primary_driver_id:
           type: string
           description: ID of the driver associated with a subscription
@@ -552,13 +552,13 @@ components:
           description: ID of the company associated with B2B / MINIB2B subscription
         organization_id:
           type: string
-          description: ID of the organization associated with B2B subscriptions. An organization is a company which can have children companies having FINN subscriptions
+          description: ID of the organization associated with B2B subscriptions. An organization is a company which can have children companies having subscriptions
         manager_id:
           type: string
-          description: ID of the FINN person managing this subscription
+          description: ID of the person managing this subscription
         salesperson_id:
           type: string
-          description: ID of the FINN sales person who signed this subscription
+          description: ID of the sales person who signed this subscription
         primary_driver_id:
           type: string
           description: ID of the driver associated with a subscription
@@ -596,7 +596,7 @@ components:
         last_contract_change_date:
           type: string
           format: date-time
-          description: Time at which any contract related properties were updated. Needed by SAPxFINN team
+          description: Time at which any contract related properties were updated. Needed by team
         damage_deductible_teilkasko:
           type: number
           description: Teilkasko damage deductible in cents

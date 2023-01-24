@@ -17,7 +17,7 @@ describe("response utils", () => {
       expect(res).toHaveProperty("body");
       expect(res.statusCode).toBe(StatusCodes.SUCCESS);
       expect(res.headers).toHaveProperty("Content-Type");
-      expect(res.headers).toHaveProperty("x-finn-request-id");
+      expect(res.headers).toHaveProperty("x--request-id");
       expect(res.body).toBe(JSON.stringify({ data, message }));
     });
 
@@ -30,7 +30,7 @@ describe("response utils", () => {
       expect(res).toHaveProperty("body");
       expect(res.statusCode).toBe(StatusCodes.SUCCESS);
       expect(res.headers).toHaveProperty("Content-Type");
-      expect(res.headers).toHaveProperty("x-finn-request-id");
+      expect(res.headers).toHaveProperty("x--request-id");
       expect(res.body).toBe(JSON.stringify({ data, message }));
     });
   });

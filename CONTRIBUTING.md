@@ -1,7 +1,7 @@
 # Welcome Contributor
 
 Welcome, new contributor! You have been chosen to join our adventure and help us write the next great adventure tale!
-You will be working with a team of other adventurous invidivduals to create an epic story that will entertain, engage and help the people of FINN-land.
+You will be working with a team of other adventurous invidivduals to create an epic story that will entertain, engage and help the people of computer-land.
 We are counting on you to use your creativity and imagination to help us take the magic machine in new and exciting directions.
 We can't wait to see what you come up with!
 

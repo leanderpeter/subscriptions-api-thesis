@@ -4,7 +4,7 @@ import VERSION from "~/src/version";
 type Entry = Record<string, unknown> & { actor: string };
 type ErrorEntry = Entry & { err: string };
 
-const finnFormatter = winston.format((info) => {
+const formatter = winston.format((info) => {
   info.time = new Date().toISOString();
   info.v = VERSION;
   return info;
@@ -19,7 +19,7 @@ export interface Logger {
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || "info",
-  format: winston.format.combine(finnFormatter(), winston.format.json()),
+  format: winston.format.combine(formatter(), winston.format.json()),
   transports: [
     new winston.transports.Console({
       silent: process.env.NODE_ENV === "test",

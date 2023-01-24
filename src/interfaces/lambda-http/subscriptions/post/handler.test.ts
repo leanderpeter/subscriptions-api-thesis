@@ -38,7 +38,7 @@ function createContext() {
   };
   const event = {
     headers: {
-      "x-finn-actor": "jest",
+      "x-actor": "jest",
     },
     body: JSON.stringify(input),
   };
@@ -61,7 +61,7 @@ describe("POST /subscriptions", () => {
     expect(res.body).toEqual(
       JSON.stringify({
         data: {},
-        message: "header x-finn-actor is required",
+        message: "header x-actor is required",
       })
     );
   });

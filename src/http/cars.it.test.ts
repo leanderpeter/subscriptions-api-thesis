@@ -18,13 +18,13 @@ describe.skip("HttpCarRepository", () => {
   describe("confirmReservation", () => {
     test("should confirm a reservation token and return a carId", async () => {
       const carId = await repo.confirmReservation(
-        "df75771b-5ea8-4782-bd3c-e872dcabf62f:finn-retooltest4",
+        "df75771b-5ea8-4782-bd3c-e872dcabf62f-retooltest4",
         {
           requestId: "",
-          actor: "customer.product.tech@finn.auto",
+          actor: "leander.peter@icloud.com",
         }
       );
-      expect(carId).toBe("finn-retooltest4");
+      expect(carId).toBe("retooltest4");
     });
   });
 });

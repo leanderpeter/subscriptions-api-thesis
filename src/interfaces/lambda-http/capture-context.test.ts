@@ -29,8 +29,8 @@ describe("captureEventContext", () => {
 
   test("returns the actor and request id from headers", () => {
     const headers: APIGatewayEvent["headers"] = {
-      "x-finn-actor": "jest",
-      "x-finn-request-id": "test-request-id",
+      "x-actor": "jest",
+      "x--request-id": "test-request-id",
     };
     const ctx = captureEventContext(headers);
     expect(ctx).toStrictEqual({
@@ -41,7 +41,7 @@ describe("captureEventContext", () => {
 
   test("returns the request id from context", () => {
     const headers: APIGatewayEvent["headers"] = {
-      "x-finn-actor": "jest",
+      "x-actor": "jest",
     };
     const context = {
       awsRequestId: "aws-test-1d-1234",

@@ -59,7 +59,7 @@ describe("PUT /subscriptions/{id}/state", () => {
       expect(res.body).toEqual(
         JSON.stringify({
           data: {},
-          message: "header x-finn-actor is required",
+          message: "header x-actor is required",
         })
       );
     });
@@ -71,7 +71,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
       });
       expect(res.statusCode).toEqual(400);
@@ -91,7 +91,7 @@ describe("PUT /subscriptions/{id}/state", () => {
         },
         body: "invalidJSON",
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
       });
       expect(res.statusCode).toEqual(400);
@@ -110,7 +110,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           termination_reason: "Because of it",
@@ -132,7 +132,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           state: "ACTIVE",
@@ -157,7 +157,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           state: "ACTIVE",
@@ -180,7 +180,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           termination_reason: "Canceled before handover",
@@ -212,7 +212,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           termination_reason: sub.terminationReason,
@@ -240,7 +240,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           state: "CANCELED",
@@ -267,7 +267,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           termination_reason:
@@ -301,7 +301,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           termination_reason: sub.terminationReason,
@@ -331,7 +331,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           state: "STOPPED",
@@ -357,7 +357,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           state: "INACTIVE",
@@ -382,7 +382,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           state: "INACTIVE",
@@ -404,7 +404,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           state: "ENDED",
@@ -429,7 +429,7 @@ describe("PUT /subscriptions/{id}/state", () => {
           id: "123",
         },
         headers: {
-          "x-finn-actor": "me",
+          "x-actor": "me",
         },
         body: JSON.stringify({
           state: "ENDED",

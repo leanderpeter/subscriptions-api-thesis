@@ -8,8 +8,8 @@ export type EventContext = {
 
 export const CONTEXT_KEYS = {
   CORRELATION_ID_HEADER_NAME:
-    process.env.CORRELATION_ID_HEADER_NAME || "x-finn-request-id",
-  AUTH_ACTOR: process.env.ACTOR_HEADER_NAME || "x-finn-actor",
+    process.env.CORRELATION_ID_HEADER_NAME || "x--request-id",
+  AUTH_ACTOR: process.env.ACTOR_HEADER_NAME || "x-actor",
 };
 
 export const createTraceId = (correlationId?: string): string => {

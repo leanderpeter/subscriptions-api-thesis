@@ -12,8 +12,8 @@ import createHandler, {
 function createContext() {
   const listSubscriptions = jest.fn();
   const headers = {
-    "x-finn-actor": "me",
-    "x-finn-request-id": "test-request-id",
+    "x-actor": "me",
+    "x--request-id": "test-request-id",
   };
   return {
     listSubscriptions,
@@ -69,7 +69,7 @@ describe("GET /subscriptions", () => {
     expect(res.body).toEqual(
       JSON.stringify({
         data: {},
-        message: "header x-finn-actor is required",
+        message: "header x-actor is required",
       })
     );
   });

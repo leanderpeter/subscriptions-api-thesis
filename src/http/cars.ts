@@ -60,8 +60,8 @@ class HttpCarRepository implements CarRepository {
         {},
         {
           headers: {
-            "x-finn-request-id": metadata.requestId,
-            "x-finn-actor": metadata.actor,
+            "x--request-id": metadata.requestId,
+            "x-actor": metadata.actor,
           },
         }
       );
