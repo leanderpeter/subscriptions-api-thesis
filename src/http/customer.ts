@@ -74,6 +74,7 @@ class HttpCustomerRepository implements CustomerRepository, HealthIndicator {
       return mapToCustomer(record);
     } catch (err) {
       const axiosErr = err as AxiosError;
+
       if (axiosErr.response) {
         const { status } = axiosErr.response;
         if (status === 404) {
