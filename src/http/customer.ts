@@ -5,7 +5,6 @@ import {
   NotFoundError,
   ServiceUnavailableError,
 } from "~/src/domain/types/errors";
-import createLogger from "../utils/logger";
 
 type HealthResponse = {
   status: string;
@@ -64,8 +63,6 @@ class HttpCustomerRepository implements CustomerRepository, HealthIndicator {
     metadata: { requestId: string; actor: string }
   ): Promise<Customer> {
     const url = `/api/internal/customers/${id}/profile`;
-    const logger = createLogger("getById - customers");
-    logger.info(url, { actor: metadata.actor });
     try {
       const response = await this.cssConnection.get(url, {
         headers: {
@@ -73,12 +70,11 @@ class HttpCustomerRepository implements CustomerRepository, HealthIndicator {
           "x-actor": metadata.actor,
         },
       });
-      logger.info("response", { actor: metadata.actor, response });
       const record = (<GetCustomerResponse>response.data).data;
       return mapToCustomer(record);
     } catch (err) {
       const axiosErr = err as AxiosError;
-      logger.info("error", { actor: metadata.actor, axiosErr });
+
       if (axiosErr.response) {
         const { status } = axiosErr.response;
         if (status === 404) {
