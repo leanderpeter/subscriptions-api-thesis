@@ -81,6 +81,7 @@ jobs:
         SUBSCRIPTIONS_VPC_SUBNET_IDS: ${{vars.SUBSCRIPTIONS_VPC_SUBNET_IDS}}
 
   deploy-staging:
+    environment: staging
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/${CI_DEFAULT_BRANCH}'
@@ -113,6 +114,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
   deploy-production:
+    environment: production
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/main'
