@@ -1,6 +1,6 @@
 import moxios from "moxios";
 import axios, { AxiosInstance } from "axios";
-import HttpCarRepository, { mapToCar } from "~/src/http/cars";
+import HttpCarRepository, { mapToCar } from "~/src/adapters/cars";
 import {
   NotFoundError,
   ConflictError,

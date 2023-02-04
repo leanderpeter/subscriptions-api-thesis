@@ -1,5 +1,5 @@
 import axios from "axios";
-import HttpCarRepository from "~/src/http/cars";
+import HttpCarRepository from "~/src/adapters/cars";
 
 /**
  * This is an integration test for CarService. Remove `.skip` part when needed

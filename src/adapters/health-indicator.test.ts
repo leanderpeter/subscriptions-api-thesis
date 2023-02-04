@@ -1,5 +1,5 @@
 import moxios from "moxios";
-import HttpHealthIndicator from "~/src/http/health-indicator";
+import HttpHealthIndicator from "~/src/adapters/health-indicator";
 
 describe("HttpClient", () => {
   beforeEach(() => {

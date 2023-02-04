@@ -2,7 +2,7 @@ import {
   calculateDaysBetweenDates,
   calculateEndDate,
   parseDate,
-} from "~/src/http/datetime.utils";
+} from "~/src/adapters/datetime.utils";
 import { InvalidInputError } from "~/src/domain/types/errors";
 
 describe("parseDate", () => {
