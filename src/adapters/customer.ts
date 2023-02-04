@@ -5,6 +5,7 @@ import {
   NotFoundError,
   ServiceUnavailableError,
 } from "~/src/domain/types/errors";
+import createLogger from "~/src/utils/logger";
 
 type HealthResponse = {
   status: string;
@@ -45,6 +46,7 @@ export function mapToCustomer(input: CustomerRecord): Customer {
   };
 }
 
+const l = createLogger("customers-adapter");
 class HttpCustomerRepository implements CustomerRepository, HealthIndicator {
   private readonly cssConnection;
 
@@ -80,6 +82,11 @@ class HttpCustomerRepository implements CustomerRepository, HealthIndicator {
         if (status === 404) {
           throw new NotFoundError(`Customer<${id}>`);
         } else {
+          l.error("Cars-Service-Error", {
+            actor: metadata.actor,
+            requestId: metadata.requestId,
+            err: (err as Error).message,
+          });
           throw new ServiceUnavailableError("customers");
         }
       } else {

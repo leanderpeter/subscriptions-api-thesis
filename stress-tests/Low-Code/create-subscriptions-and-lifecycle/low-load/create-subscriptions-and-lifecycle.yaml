@@ -1,0 +1,172 @@
+config:
+  target: " "
+  processor: "./response-parser.js"
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      name: Warm up
+    - duration: 120
+      arrivalRate: 1
+      rampTo: 3
+      name: Ramp up load
+    - duration: 600
+      arrivalRate: 5
+      name: Sustained load
+  plugins:
+    faker:
+      locale: en
+  variables:
+    id: "$faker.datatype.uuid"
+    contact_id: "$faker.datatype.uuid"
+    car_reservation_token: "$faker.datatype.uuid"
+    type: "B2C"
+    term: "$faker.datatype.number"
+    signing_date: "2023-01-29T20:35:58.223Z"
+    term_type: "$faker.datatype.uuid"
+    deposit: "$faker.datatype.uuid"
+    amount: "$faker.datatype.number"
+    mileage_package: "$faker.datatype.uuid"
+
+scenarios:
+  - name: "Create Subscriptions and lifecycle"
+    flow:
+      - post:
+          url: "https://api.hubapi.com/crm/v3/objects/deals"
+          capture:
+            json: "$.id"
+            as: "hs_object_id"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.HUBSPOT_API_TOKEN }}"
+          json:
+            properties:
+              contact_id: "{{ contact_id }}"
+              car_reservation_token: "{{ car_reservation_token }}"
+              type: "{{ type }}"
+              term: "{{ term }}"
+              signing_date: "{{ signing_date }}"
+              term_type: "{{ term_type }}"
+              deposit: "{{ deposit }}"
+              amount: "{{ amount }}"
+              mileage_package: "{{ mileage_package }}"
+              mileage_package_fee: "{{ mileage_package_fee }}"
+              dealstage: "closedlost" # this is the default by HS but its actually CREATED (THESE THINGS ARE THE REASON WE HAVE SUBS-API!!)
+      - post:
+          url: "https://api.airtable.com/v0/appahh9eQnL1S72ZD/tbl2Lmzb7g6HmVLYs"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.AIRTABLE_TOKEN }}"
+          json:
+            records: 
+              - fields: 
+                  subscription_id: "{{ hs_object_id }}"
+                  state: "CREATED"
+      # MARK AS ACTIVE #
+      - patch:
+          url: "https://api.hubapi.com/crm/v3/objects/deals/{{ hs_object_id }}"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.HUBSPOT_API_TOKEN }}"
+          json:
+            properties:
+              dealstage: "144246771" # MARK AS ACTIVE
+      #find record
+      - get: 
+          url: "https://api.airtable.com/v0/appahh9eQnL1S72ZD/tbl2Lmzb7g6HmVLYs?filterByFormula={subscription_id}={{ hs_object_id }}" 
+          capture:
+            json: "$.records[0].id"
+            as: "at_record_id"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.AIRTABLE_TOKEN }}"
+      #update the record to ACTIVE
+      - patch: 
+          url: "https://api.airtable.com/v0/appahh9eQnL1S72ZD/tbl2Lmzb7g6HmVLYs/{{ at_record_id }}"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.AIRTABLE_TOKEN }}"
+          json:
+            fields: 
+              state: "ACTIVE"
+      # GET BY ID #
+      - get:
+          url: "https://api.hubapi.com/crm/v3/objects/deals/{{ hs_object_id }}"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.HUBSPOT_API_TOKEN }}"
+      - get: 
+          url: "https://api.airtable.com/v0/appahh9eQnL1S72ZD/tbl2Lmzb7g6HmVLYs?filterByFormula={subscription_id}={{ hs_object_id }}" 
+          capture:
+            json: "$.records[0].id"
+            as: "at_record_id"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.AIRTABLE_TOKEN }}"
+      # MARK AS INACTIVE #
+      - patch:
+          url: "https://api.hubapi.com/crm/v3/objects/deals/{{ hs_object_id }}"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.HUBSPOT_API_TOKEN }}"
+          json:
+            properties:
+              dealstage: "144246772" # MARK AS INACTIVE
+      #find record
+      - get: 
+          url: "https://api.airtable.com/v0/appahh9eQnL1S72ZD/tbl2Lmzb7g6HmVLYs?filterByFormula={subscription_id}={{ hs_object_id }}" 
+          capture:
+            json: "$.records[0].id"
+            as: "at_record_id"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.AIRTABLE_TOKEN }}"
+      #update the record to INACTIVE
+      - patch: 
+          url: "https://api.airtable.com/v0/appahh9eQnL1S72ZD/tbl2Lmzb7g6HmVLYs/{{ at_record_id }}"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.AIRTABLE_TOKEN }}"
+          json:
+            fields: 
+              state: "INACTIVE"
+      # GET BY ID #
+      - get:
+          url: "https://api.hubapi.com/crm/v3/objects/deals/{{ hs_object_id }}"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.HUBSPOT_API_TOKEN }}"
+      - get: 
+          url: "https://api.airtable.com/v0/appahh9eQnL1S72ZD/tbl2Lmzb7g6HmVLYs?filterByFormula={subscription_id}={{ hs_object_id }}" 
+          capture:
+            json: "$.records[0].id"
+            as: "at_record_id"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.AIRTABLE_TOKEN }}"
+      # MARK AS ENDED #
+      - patch:
+          url: "https://api.hubapi.com/crm/v3/objects/deals/{{ hs_object_id }}"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.HUBSPOT_API_TOKEN }}"
+          json:
+            properties:
+              dealstage: "144246773" # MARK AS ENDED
+      #find record
+      - get: 
+          url: "https://api.airtable.com/v0/appahh9eQnL1S72ZD/tbl2Lmzb7g6HmVLYs?filterByFormula={subscription_id}={{ hs_object_id }}" 
+          capture:
+            json: "$.records[0].id"
+            as: "at_record_id"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.AIRTABLE_TOKEN }}"
+      #update the record to ENDED
+      - patch: 
+          url: "https://api.airtable.com/v0/appahh9eQnL1S72ZD/tbl2Lmzb7g6HmVLYs/{{ at_record_id }}"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.AIRTABLE_TOKEN }}"
+          json:
+            fields: 
+              state: "ENDED"
