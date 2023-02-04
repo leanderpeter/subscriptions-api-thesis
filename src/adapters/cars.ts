@@ -6,6 +6,7 @@ import {
   ServiceUnavailableError,
   InvalidOperationError,
 } from "~/src/domain/types/errors";
+import createLogger from "~/src/utils/logger";
 
 type CarRecord = {
   id: string;
@@ -38,6 +39,7 @@ export function mapToCar(input: CarRecord): Car {
   return car;
 }
 
+const l = createLogger("cars-adapter");
 class HttpCarRepository implements CarRepository {
   private readonly connection: AxiosInstance;
 
@@ -79,6 +81,11 @@ class HttpCarRepository implements CarRepository {
         } else if (status === 403) {
           throw new InvalidOperationError(message);
         } else {
+          l.error("Cars-Service-Error", {
+            actor: metadata.actor,
+            requestId: metadata.requestId,
+            err: (err as Error).message,
+          });
           throw new ServiceUnavailableError("cars");
         }
       } else {

@@ -1,0 +1,46 @@
+config:
+  target: "https://api.hubapi.com"
+  processor: "./my-functions.js"
+  phases:
+    - duration: 1
+      arrivalRate: 1
+      name: Warm up
+  plugins:
+    faker:
+      locale: en
+  variables:
+    id: "$faker.datatype.uuid"
+    contact_id: "$faker.datatype.uuid"
+    car_reservation_token: "$faker.datatype.uuid"
+    type: "B2C"
+    term: "$faker.datatype.number"
+    signing_date: "2023-01-29T20:35:58.223Z"
+    term_type: "$faker.datatype.uuid"
+    deposit: "$faker.datatype.uuid"
+    amount: "$faker.datatype.number"
+    mileage_package: "$faker.datatype.uuid"
+
+scenarios:
+  - name: "Create Subscriptions & move through stages"
+    flow:
+      - post:
+          url: "/crm/v3/objects/deals"
+          capture:
+            json: "$.id"
+            as: "hs_object_id"
+          afterResponse: "printStatus"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.API_KEY }}"
+          json:
+            properties:
+              contact_id: "{{ contact_id }}"
+              car_reservation_token: "{{ car_reservation_token }}"
+              type: "{{ type }}"
+              term: "{{ term }}"
+              signing_date: "{{ signing_date }}"
+              term_type: "{{ term_type }}"
+              deposit: "{{ deposit }}"
+              amount: "{{ amount }}"
+              mileage_package: "{{ mileage_package }}"
+              mileage_package_fee: "{{ mileage_package_fee }}"
+          

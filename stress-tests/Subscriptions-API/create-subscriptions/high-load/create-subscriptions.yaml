@@ -1,0 +1,70 @@
+config:
+  target: "https://dev-api-ops-subscriptions-thesis.leanderpeter.de"
+  processor: "./response-parser.js"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      name: Warm up
+    - duration: 120
+      arrivalRate: 5
+      rampTo: 30
+      name: Ramp up load
+    - duration: 600
+      arrivalRate: 80
+      name: Sustained load
+  plugins:
+    faker:
+      locale: en
+  variables:
+    id: "$faker.datatype.uuid"
+    contact_id: "$faker.datatype.uuid"
+    car_reservation_token: "$faker.datatype.uuid"
+    type: "B2C"
+    term: "$faker.datatype.number"
+    signing_date: "2023-01-29T20:35:58.223Z"
+    term_type: "FIXED"
+    deposit: "$faker.datatype.number"
+    amount: "$faker.datatype.number"
+    mileage_package: "$faker.datatype.number"
+    mileage_package_fee: "$faker.datatype.number"
+    additional_mileage_fee: "$faker.datatype.number"
+    handover_firstname: "$faker.name.firstName"
+    handover_lastname: "$faker.name.lastName"
+    handover_housenumber: "$faker.datatype.number"
+    handover_street: "$faker.address.street"
+    handover_city: "$faker.address.city"
+    handover_zip: "$faker.address.zipCode"
+    handover_address_extra: "$faker.address.secondaryAddress"
+    preferred_handover_date: "2023-01-29T20:35:58.223Z"
+
+scenarios:
+  - name: "Create Subscriptions"
+    flow:
+      - post:
+          url: "/subscriptions"
+          headers:
+            x-api-key: "{{ $processEnvironment.SUBSCRIPTIONS_API_KEY }}"
+            x-actor: "leander"
+          json:
+            id: "{{ id }}"
+            contact_id: "{{ contact_id }}"
+            car_reservation_token: "{{ car_reservation_token }}"
+            type: "{{ type }}"
+            term: "{{ term }}"
+            signing_date: "{{ signing_date }}"
+            term_type: "{{ term_type }}"
+            deposit: "{{ deposit }}"
+            amount: "{{ amount }}"
+            mileage_package: "{{ mileage_package }}"
+            mileage_package_fee: "{{ mileage_package_fee }}"
+            additional_mileage_fee: "{{ additional_mileage_fee }}"
+            handover_firstname: "{{ handover_firstname }}"
+            handover_lastname: "{{ handover_lastname }}"
+            handover_housenumber: "'{{ handover_housenumber }}'"
+            handover_street: "{{ handover_street }}"
+            handover_city: "{{ handover_city }}"
+            handover_zip: "{{ handover_zip }}"
+            handover_address_extra: "{{ handover_address_extra }}"
+            preferred_handover_date: "{{ preferred_handover_date }}"
+
+
