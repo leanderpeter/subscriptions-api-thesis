@@ -1,5 +1,5 @@
 import axios from "axios";
-import HttpCustomerRepository from "~/src/http/customer";
+import HttpCustomerRepository from "~/src/adapters/customer";
 import { NotFoundError } from "~/src/domain/types/errors";
 
 /**

@@ -8,15 +8,13 @@ info:
       * retrieve:
           * subscription records
           * events 
-          * drivers associated with a subscription.
-  version: 1.0.0
+          * possible state transitions
+  version: 0.1.0
 
 servers:
-  - url: https://dev-api-ops-subscriptions. 
+  - url: https://dev-api-ops-subscriptions-thesis.leanderpeter.de
     description: Development server
-  - url: https://stg-api-ops-subscriptions. 
-    description: Staging server
-  - url: https://api-ops-subscriptions. 
+  - url: https://api-ops-subscriptions-thesis.leanderpeter.de
     description: Production server
 
 tags:
@@ -55,6 +53,55 @@ paths:
               schema:
                 $ref: "#/components/schemas/OneSubscription"
 
+    get:
+      tags:
+        - Retrieve
+      summary: List all subscriptions
+      description: >
+        Returns subscription records.
+      operationId: getSubscriptions
+      parameters:
+        - in: header
+          name: x-request-id
+          schema:
+            $ref: "#/components/schemas/x-request-id"
+        - in: query
+          name: count
+          schema:
+            type: integer
+        - in: query
+          name: offset
+          schema:
+            type: integer
+        - in: query
+          name: car_id
+          schema:
+            type: string
+        - in: query
+          name: state
+          schema:
+            type: string
+            enum:
+              ["CREATED", "ACTIVE", "CANCELED", "INACTIVE", "STOPPED", "ENDED"]
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum:
+              ["B2B", "B2C", "MINIB2B"]
+        - in: query
+          name: contact_id
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AllSubscriptions"
+
+
   /subscriptions/{subscription_id}:
     get:
       tags:
@@ -87,6 +134,34 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OneSubscription"
+
+
+  /subscriptions/{subscription_id}/state_transitions:
+    get:
+      tags:
+        - Retrieve
+      summary: List possible state transitions for a subscription
+      description: >
+        Returns possible state transitions for specific subscription record.
+      operationId: possibleStateTransitions
+      parameters:
+        - in: header
+          name: x-request-id
+          schema:
+            $ref: "#/components/schemas/x-request-id"
+        - in: path
+          name: subscription_id
+          schema:
+            type: string
+          required: true
+          description: Subscription ID
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PossibleStateTransitions"
 
   /subscriptions/{subscription_id}/events:
     get:
@@ -137,6 +212,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Events"
+              
+  /subscriptions/{subscription_id}/state:
+    put:
+      tags:
+        - Update
+      summary: Changes the state of a subscription
+      description: Updates the state of a subscription.
+      operationId: updateSubscriptionState
+      parameters:
+        - in: header
+          name: x-request-id
+          schema:
+            $ref: "#/components/schemas/x-request-id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSubscriptionState"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OneSubscription"
+
 
   /events:
     get:
@@ -285,40 +387,6 @@ components:
         handover_phone_number:
           type: string
           description: Phone number of the car handover recipient
-        company_id:
-          type: string
-          description: Company ID [Required for B2B / MINIB2B]
-        organization_id:
-          type: string
-          description: ID of the organization associated with B2B subscriptions. An organization is a company which can have children companies having subscriptions
-        manager_id:
-          type: string
-          description: ID of the person managing this subscription
-        salesperson_id:
-          type: string
-          description: ID of the sales person who signed this subscription
-        primary_driver_id:
-          type: string
-          description: ID of the driver associated with a subscription
-        previous_subscription_id:
-          type: string
-          description: ID of the previous subscription of a customer
-        previous_subscription_source:
-          type: string
-          enum: [OLD_WORLD, NEW_WORLD]
-          description: Source of the previous subscription
-        retention_comment:
-          type: string
-          description: Retention related comment
-        non_retention_reason:
-          type: string
-          description: Reason for non-retention
-        damage_deductible_teilkasko:
-          type: number
-          description: Teilkasko damage deductible in cents
-        damage_deductible_vollkasko:
-          type: number
-          description: Vollkasko damage deductible in cents
       required:
         - car_reservation_token
         - contact_id
@@ -336,7 +404,6 @@ components:
         - handover_street
         - handover_city
         - handover_zip
-        - preferred_handover_date
 
     UpdateSubscriptionState:
       type: object
@@ -354,43 +421,6 @@ components:
           format: date-time
       required:
         - state
-
-
-    UpdateHandover:
-      type: object
-      properties:
-        handover_firstname:
-          type: string
-          description: First name of the recipient
-        handover_lastname:
-          type: string
-          description: Last name of the recipient
-        handover_housenumber:
-          type: string
-          description: Housenumber of the recipient
-        handover_street:
-          type: string
-          description: Street name of the recipient
-        handover_city:
-          type: string
-          description: City of of the recipient
-        handover_zip:
-          type: string
-          description: Zipcode of the recipient
-        handover_phone_number:
-          type: string
-          description: Phone number of the recipient
-        handover_address_extra:
-          type: string
-          description: Any additional address data of the recipient
-      required:
-        - handover_firstname
-        - handover_lastname
-        - handover_housenumber
-        - handover_street
-        - handover_city
-        - handover_zip
-        - handover_phone_number
 
 
     #Responses
@@ -432,6 +462,17 @@ components:
                 type: string
               snapshot:
                 $ref: "#/components/schemas/Subscription"
+              
+    PossibleStateTransitions:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: string
+
 
 
     Subscription:
@@ -547,44 +588,6 @@ components:
           type: string
           description: Termination datetime in ISO_8601 format
           format: date-time
-        company_id:
-          type: string
-          description: ID of the company associated with B2B / MINIB2B subscription
-        organization_id:
-          type: string
-          description: ID of the organization associated with B2B subscriptions. An organization is a company which can have children companies having subscriptions
-        manager_id:
-          type: string
-          description: ID of the person managing this subscription
-        salesperson_id:
-          type: string
-          description: ID of the sales person who signed this subscription
-        primary_driver_id:
-          type: string
-          description: ID of the driver associated with a subscription
-        deposit_details:
-          description: Deposit details of the subscription. Only present if expand=deposit is passed
-          type: object
-          properties:
-            paid:
-              type: boolean
-        previous_subscription_id:
-          type: string
-          description: Subscription ID of the previous subscription.
-        previous_subscription_source:
-          type: string
-          enum: ["OLD_WORLD", "NEW_WORLD"]
-          description: Previous subscription tech-architecture source.
-        retention_type:
-          type: string
-          enum: ["PROLONGATION","SWAP_SAME_DAY","SWAP_DIFFERENT_DAY","EXPANSION","REPEAT_CUSTOMER"]
-          description: Retention Type of customer.
-        retention_comment:
-          type: string
-          description: Custom comment about retention.
-        non_retention_reason:
-          type: string
-          description: Reason for non-retention.
         created_at:
           type: string
           format: date-time
@@ -593,54 +596,6 @@ components:
           type: string
           format: date-time
           description: Time at which subscription was last updated
-        last_contract_change_date:
-          type: string
-          format: date-time
-          description: Time at which any contract related properties were updated. Needed by team
-        damage_deductible_teilkasko:
-          type: number
-          description: Teilkasko damage deductible in cents
-        damage_deductible_vollkasko:
-          type: number
-          description: Vollkasko damage deductible in cents
-        contact:
-          type: object
-          description: Customer Object associated to the subscription
-          $ref: "#/components/schemas/Contact"
-
-        
-    Contact:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the customer
-        first_name:
-          type: string
-          description: The first name of the customer
-        last_name:
-          type: string
-          description: The last name of the customer
-        date_of_birth:
-          type: string
-          format: date-time
-          description: The date of birth of the customer in ISO 8601 
-        street:
-          type: string
-          description: The street address of the customer
-        city:
-          type: string
-          description: The city of the customer's address
-        zip:
-          type: string
-          description: The zip code of the customer's address
-        internal_verification_decision_dl:
-          type: string
-          description: The internal verification decision for the customer's driver's license
-        internal_verification_decision_id:
-          type: string
-          description: The internal verification decision for the customer's identification
-          
 
     AllSubscriptions:
       type: object

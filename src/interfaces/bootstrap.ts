@@ -2,8 +2,8 @@ import knex, { Knex } from "knex";
 import axios from "axios";
 import { getValueFromEnv } from "~/src/utils/system-utils";
 import { PGSubscriptionRepository } from "~/src/postgres/subscriptions";
-import HttpCustomerRepository from "~/src/http/customer";
-import HttpCarRepository from "~/src/http/cars";
+import HttpCustomerRepository from "~/src/adapters/customer";
+import HttpCarRepository from "~/src/adapters/cars";
 
 const DEFAULT_TIMEOUT = 5000;
 

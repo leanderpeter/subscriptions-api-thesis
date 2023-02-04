@@ -1,6 +1,6 @@
 import moxios from "moxios";
 import axios, { AxiosInstance } from "axios";
-import HttpCustomerRepository, { mapToCustomer } from "~/src/http/customer";
+import HttpCustomerRepository, { mapToCustomer } from "~/src/adapters/customer";
 import {
   NotFoundError,
   ServiceUnavailableError,

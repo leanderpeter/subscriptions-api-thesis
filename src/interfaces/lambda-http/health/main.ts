@@ -3,7 +3,7 @@ import withLogger from "~/src/interfaces/lambda-http/with-logger";
 import createHandler, {
   Dependencies,
 } from "~/src/interfaces/lambda-http/health/handler";
-import HttpHealthIndicator from "~/src/http/health-indicator";
+import HttpHealthIndicator from "~/src/adapters/health-indicator";
 import PostgresHealthIndicator from "~/src/postgres/health-indicator";
 import { getDBConnection } from "~/src/interfaces/bootstrap";
 
