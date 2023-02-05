@@ -49,7 +49,7 @@ const functions: Functions = {
   },
   "api-create-subscription": {
     handler: "src/interfaces/lambda-http/subscriptions/post/main.handler",
-    timeout: 15,
+    timeout: 20,
     vpc,
     events: [
       {
@@ -63,7 +63,7 @@ const functions: Functions = {
   },
   "api-transition-subscription-state": {
     handler: "src/interfaces/lambda-http/subscriptions/put-state/main.handler",
-    timeout: 15,
+    timeout: 20,
     vpc,
     events: [
       {
