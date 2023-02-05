@@ -18,8 +18,8 @@ export function getDBConnection(): Knex {
       // Not more than 1 connection
       // Remember that each lambda container is sequential
       max: 1,
-      createTimeoutMillis: 5000,
-      acquireTimeoutMillis: 5000,
+      createTimeoutMillis: 15000,
+      acquireTimeoutMillis: 15000,
       // Free resources are destroyed
       idleTimeoutMillis: 1000,
       // Interval to check for idle resources.

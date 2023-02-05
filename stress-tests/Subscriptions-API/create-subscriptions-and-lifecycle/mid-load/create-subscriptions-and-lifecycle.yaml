@@ -3,14 +3,14 @@ config:
   processor: "./response-parser.js"
   phases:
     - duration: 60
-      arrivalRate: 5
+      arrivalRate: 3
       name: Warm up
     - duration: 120
-      arrivalRate: 5
-      rampTo: 30
+      arrivalRate: 3
+      rampTo: 9
       name: Ramp up load
     - duration: 600
-      arrivalRate: 80
+      arrivalRate: 30
       name: Sustained load
   plugins:
     faker:
