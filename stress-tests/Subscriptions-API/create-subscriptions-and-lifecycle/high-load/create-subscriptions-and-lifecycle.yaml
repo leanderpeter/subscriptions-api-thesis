@@ -1,7 +1,7 @@
 config:
   target: "https://dev-api-ops-subscriptions-thesis.leanderpeter.de"
   http:
-    timout: 20
+    timeout: 21
   processor: "./response-parser.js"
   phases:
     - duration: 60
@@ -41,10 +41,10 @@ config:
 
 scenarios:
   - name: "Create Subscriptions & lifecycle"
+    beforeRequest: trapError
     flow:
       - post:
           url: "/subscriptions"
-          afterResponse: "printStatus"
           headers:
             x-api-key: "{{ $processEnvironment.SUBSCRIPTIONS_API_KEY }}"
             x-actor: "leander"
@@ -71,7 +71,6 @@ scenarios:
             preferred_handover_date: "{{ preferred_handover_date }}"
       - put:
           url: "/subscriptions/{{ id }}/state"
-          afterResponse: "printStatus"
           headers:
             x-api-key: "{{ $processEnvironment.SUBSCRIPTIONS_API_KEY }}"
             x-actor: "leander"
@@ -79,7 +78,6 @@ scenarios:
             state: "ACTIVE"
       - get: 
           url: "/subscriptions/{{ id }}"
-          afterResponse: "printStatus"
           headers:
             x-api-key: "{{ $processEnvironment.SUBSCRIPTIONS_API_KEY }}"
             x-actor: "leander"
