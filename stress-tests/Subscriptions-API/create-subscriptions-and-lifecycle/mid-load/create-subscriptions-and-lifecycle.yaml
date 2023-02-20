@@ -1,6 +1,8 @@
 config:
   target: "https://dev-api-ops-subscriptions-thesis.leanderpeter.de"
   processor: "./response-parser.js"
+  http:
+    timeout: 21
   phases:
     - duration: 60
       arrivalRate: 3
